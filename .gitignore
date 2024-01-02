@@ -19,6 +19,8 @@
 # misc
 .DS_Store
 *.pem
+.AppleDouble
+.LSOverride
 
 # debug
 npm-debug.log*
@@ -35,3 +37,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# webstorm
+/.idea
+
+# iCloud generated files
+*.icloud
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
