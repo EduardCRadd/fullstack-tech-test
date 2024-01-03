@@ -4,9 +4,15 @@ const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   mode: 'jit',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        bg: '#111111',
+        text: '#E2E2E2',
+        tertiary: '#181818',
+      },
+    },
   },
-
   plugins: [],
 }
+
 export default config
