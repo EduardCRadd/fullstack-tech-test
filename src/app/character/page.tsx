@@ -3,7 +3,7 @@
 export default function Character() {
   return (
     <main className="relative w-full h-full">
-      <div className="w-full h-[60%] md:h-[40%] bg-tertiary p-14">
+      <div className="w-full h-[800px] md:h-[500px] bg-tertiary p-14">
         <h1 className="text-5xl font-semibold text-center md:text-left">Rick and Morty</h1>
 
         <div className="pt-10 text-xl text-center md:text-left">
