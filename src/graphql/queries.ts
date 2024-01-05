@@ -1,8 +1,14 @@
 import { gql } from '@apollo/client'
 
 export const GET_ALIVE_MORTY_CHARACTERS = gql`
-  query GetAliveMortyCharacters {
-    characters(filter: { name: "Morty", status: "Alive" }) {
+  query GetAliveMortyCharacters($page: Int) {
+    characters(page: $page, filter: { name: "Morty", status: "alive" }) {
+      info {
+        count
+        pages
+        next
+        prev
+      }
       results {
         id
         name

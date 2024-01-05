@@ -1,27 +1,34 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { FC } from 'react'
 
-export default function CharacterCard() {
+import { fetchAllAliveMortyCharacters } from '@/services/rickAndMortyService'
+
+type Props = {
+  name: string
+  gender: string
+  species: string
+  avatar: string
+}
+
+const CharacterCard: FC<Props> = ({ name, gender, species, avatar }) => {
   const router = useRouter()
 
   const redirectToCharacter = () => {
+    // console.log(fetchAllAliveMortyCharacters())
     router.push('/character')
   }
 
   return (
     <div>
       <div className="w-full overflow-hidden">
-        <img
-          src="https://rickandmortyapi.com/api/character/avatar/1.jpeg"
-          alt=""
-          className="h-full w-full object-cover object-center"
-        />
+        <img src={avatar} alt={`${name}`} className="h-full w-full object-cover object-center" />
       </div>
-      <div className="py-4">
-        <p>Name: (name)</p>
-        <p>Gender: (gender)</p>
-        <p>Species: (species)</p>
+      <div className="py-4 h-[125px] flex flex-col justify-center">
+        <p>Name: {name}</p>
+        <p>Gender: {gender}</p>
+        <p>Species: {species}</p>
       </div>
       <button
         onClick={redirectToCharacter}
@@ -32,3 +39,5 @@ export default function CharacterCard() {
     </div>
   )
 }
+
+export default CharacterCard
