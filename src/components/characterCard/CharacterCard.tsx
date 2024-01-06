@@ -6,18 +6,19 @@ import { FC } from 'react'
 import { fetchAllAliveMortyCharacters } from '@/services/rickAndMortyService'
 
 type Props = {
+  id: number
   name: string
   gender: string
   species: string
   avatar: string
 }
 
-const CharacterCard: FC<Props> = ({ name, gender, species, avatar }) => {
+const CharacterCard: FC<Props> = ({ id, name, gender, species, avatar }) => {
   const router = useRouter()
 
   const redirectToCharacter = () => {
     // console.log(fetchAllAliveMortyCharacters())
-    router.push('/character')
+    router.push(`/character/${id}`)
   }
 
   return (

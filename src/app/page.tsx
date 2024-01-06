@@ -1,9 +1,10 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import CharacterCard from '@/components/characterCard/CharacterCard'
 import { fetchAllAliveMortyCharacters } from '@/services/rickAndMortyService'
 import { ICharacter } from '@/types/types'
-import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [characters, setCharacters] = useState<ICharacter[]>([])
@@ -28,6 +29,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-x-6 gap-y-28 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:gap-x-8">
             {characters.map((character) => (
               <CharacterCard
+                id={character.id}
                 key={character.id}
                 name={character.name}
                 gender={character.gender}

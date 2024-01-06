@@ -38,3 +38,34 @@ export const GET_ALIVE_MORTY_CHARACTERS = gql`
     }
   }
 `
+
+export const GET_CHARACTER_BY_ID = gql`
+  query GetCharacterById($id: ID!) {
+    character(id: $id) {
+      id
+      name
+      status
+      species
+      gender
+      image
+      origin {
+        id
+        name
+        type
+        dimension
+      }
+      location {
+        id
+        name
+        type
+        dimension
+      }
+      episode {
+        id
+        name
+        air_date
+        episode
+      }
+    }
+  }
+`
