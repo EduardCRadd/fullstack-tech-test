@@ -8,15 +8,22 @@ import { ICharacter } from '@/types/types'
 
 export default function Home() {
   const [characters, setCharacters] = useState<ICharacter[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchCharacters = async () => {
+      setIsLoading(true)
       const fetchedCharacters = await fetchAllAliveMortyCharacters()
       setCharacters(fetchedCharacters)
+      setIsLoading(false)
     }
 
     fetchCharacters()
   }, [])
+
+  if (isLoading) {
+    return <div className="w-full h-full flex justify-center items-center text-xl font-bold">Loading...</div>
+  }
 
   return (
     <main className="relative w-full h-full">

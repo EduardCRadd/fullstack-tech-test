@@ -2,43 +2,87 @@
 
 import { useEffect, useState } from 'react'
 
-import { fetchCharacterById } from '@/services/rickAndMortyService'
-import { ICharacter } from '@/types/types'
+import { fetchCharacterById, fetchEpisodeById, fetchLocationById } from '@/services/rickAndMortyService'
+import { ICharacter, IEpisode, ILocation } from '@/types/types'
 
 export default function Character({ params }: { params: { characterId: string } }) {
   const [character, setCharacter] = useState<ICharacter | null>(null)
+  const [location, setLocation] = useState<ILocation | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const characterId = params.characterId
 
   useEffect(() => {
-    if (characterId) {
-      const fetchCharacter = async () => {
-        setIsLoading(true)
-        try {
-          const fetchedCharacter = await fetchCharacterById(characterId)
-          setCharacter(fetchedCharacter)
-        } catch (error) {
-          console.error('Error fetching character:', error)
-        } finally {
-          setIsLoading(false)
-        }
-      }
+    const fetchCharacterAndLocation = async () => {
+      setIsLoading(true)
+      try {
+        const fetchedCharacter = await fetchCharacterById(characterId)
+        setCharacter(fetchedCharacter)
 
-      fetchCharacter()
+        const episodes = fetchedCharacter.episodes
+        if (episodes.length > 0) {
+          const firstEpisodeId = episodes[0].id
+          const fetchedFirstEpisode = await fetchEpisodeById(firstEpisodeId)
+
+          let updatedEpisodes: IEpisode[]
+          if (episodes.length === 1) {
+            // Only one episode, so no need to fetch the last episode separately
+            updatedEpisodes = [{ ...fetchedFirstEpisode, ...episodes[0] }]
+          } else {
+            // Multiple episodes, so fetch both the first and the last
+            const lastEpisodeId = episodes[episodes.length - 1].id
+            const fetchedLastEpisode = await fetchEpisodeById(lastEpisodeId)
+
+            updatedEpisodes = [
+              { ...fetchedFirstEpisode, ...episodes[0] },
+              ...episodes.slice(1, -1),
+              { ...fetchedLastEpisode, ...episodes[episodes.length - 1] },
+            ]
+          }
+
+          // Update the character state with detailed episode information
+          setCharacter((prevCharacter) => {
+            if (!prevCharacter) return null
+            return {
+              ...prevCharacter,
+              episodes: updatedEpisodes,
+            }
+          })
+        }
+
+        const fetchedLocation = await fetchLocationById(fetchedCharacter.location.id)
+        setLocation(fetchedLocation)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (characterId) {
+      fetchCharacterAndLocation()
     }
   }, [characterId])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div className="w-full h-full flex justify-center items-center text-xl font-bold">Loading...</div>
   }
 
   if (!character) {
-    return <div>Character not found.</div>
+    return <div className="w-full h-full flex justify-center items-center text-xl font-bold">Character not found.</div>
   }
 
-  const { name, status, origin, avatar, episodes, location } = character
+  if (!location) {
+    return (
+      <div className="w-full h-full flex justify-center items-center text-xl font-bold">
+        Loading location details...
+      </div>
+    )
+  }
+
+  const { name, status, origin, avatar, episodes } = character
   const firstEpisode = episodes[0]
   const lastEpisode = episodes[episodes.length - 1]
+  // console.log(character)
 
   return (
     <main className="relative w-full h-full">
@@ -70,7 +114,9 @@ export default function Character({ params }: { params: { characterId: string } 
           <p>No. of Residents: {location.noOfResidents}</p>
         </div>
         <div>
-          <h3 className="text-3xl font-semibold text-center md:text-left pb-4">Episodes (ep. appearance count)</h3>
+          <h3 className="text-3xl font-semibold text-center md:text-left pb-4">
+            Episodes (ep. appearance count: {episodes.length})
+          </h3>
           <p>
             First appearance: {firstEpisode.name} {firstEpisode.episode}
           </p>

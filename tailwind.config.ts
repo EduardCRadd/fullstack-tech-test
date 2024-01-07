@@ -8,7 +8,7 @@ const config: Config = {
       colors: {
         bg: '#111111',
         text: '#E2E2E2',
-        tertiary: '#181818',
+        tertiary: '#1A1A1A',
       },
     },
   },
